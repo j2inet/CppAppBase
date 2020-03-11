@@ -14,7 +14,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-    CoInitialize(NULL);
+    if(FAILED(CoInitialize(NULL)))
+        return -1;
+
     std::shared_ptr<AppWindow> appWindow = std::make_shared<DerivedWindow>(hInstance);
     appWindow->Init();
     appWindow->RunMessageLoop();
