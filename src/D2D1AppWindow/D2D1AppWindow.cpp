@@ -142,9 +142,14 @@ void D2D1AppWindow::InitDeviceIndependentResources()
 	_shapeList.push_back(ColoredShape::MakeRectangle({ 488,0,508,110 }, Secondary ));
 	_shapeList.push_back(ColoredShape::MakeRectangle({ 488,40,900,115 }, Secondary ));
 
-	_shapeList.push_back(ColoredShape::MakeRectangle({ 530,130,850,180 }, Primary ));
-	_shapeList.push_back(ColoredShape::MakeRectangle({ 530,190,850,240 }, Primary ));
-	_shapeList.push_back(ColoredShape::MakeRectangle({ 530,250,850,300 }, Primary ));
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 530,130,850,180 }, Secondary));
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 690,130,850,180 }, Primary));
+
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 530,190,850,240 }, Secondary));
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 690,190,850,240 }, Primary));
+
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 530,250,850,300 }, Secondary));
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 690,250,850,300 }, Primary));
 
 	_shapeList.push_back(ColoredShape::MakeRectangle({ 0,350,600,450 }, Secondary ));
 	_shapeList.push_back(ColoredShape::MakeRectangle({ 0,350,600,450 }, Secondary));
