@@ -24,7 +24,7 @@ protected:
 	virtual void OnUpdate(FLOAT timeSinceLastUpdate, LONGLONG globalTimer);
 	virtual void OnRender();
 
-
+	void OnResize(UINT width, UINT height) override;
 
 private:
 	void Update();
@@ -32,6 +32,7 @@ private:
 
 	ComPtr<ID2D1Factory>  _pD2D1Factory;
 	ComPtr<ID2D1HwndRenderTarget> _pRenderTarget;
+	ComPtr<ID2D1SolidColorBrush> _pBackgroundBrush;
 	D2D1_SIZE_U _size;
 
 	LARGE_INTEGER _lastPerformanceValue;

@@ -34,7 +34,7 @@ public:
 	void WriteToLog() override;
 
 private:
-	const wchar_t* _filenam e;
+	const wchar_t* _filename;
 	uint32_t _line;
 	const wchar_t* _argument;
 };

@@ -20,6 +20,11 @@ std::wstring D2D1AppWindow::GetWindowClassName()
 void D2D1AppWindow::Init()
 {
 	AppWindow::Init();
+	{
+		RECT r;
+		GetClientRect(_hWnd, &r);
+		this->_size = D2D1_SIZE_U{ static_cast<UINT32>(r.right - r.left), static_cast<UINT32>(r.bottom - r.top) };
+	}
 	LARGE_INTEGER performanceFrequency;
 	QueryPerformanceFrequency(&performanceFrequency);
 	this->_performanceFrequency = static_cast<DOUBLE>(performanceFrequency.QuadPart);
@@ -73,6 +78,7 @@ void D2D1AppWindow::OnRender()
 	if (!_pRenderTarget)
 		return;
 	_pRenderTarget->BeginDraw();
+	_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Blue));
 
 	hr = _pRenderTarget->EndDraw();
 	if (hr == D2DERR_RECREATE_TARGET)
@@ -87,10 +93,19 @@ void D2D1AppWindow::OnRender()
 
 void D2D1AppWindow::DiscardDeviceResources()
 {
+	_pBackgroundBrush = nullptr;
 	_pRenderTarget = nullptr;
 }
 
+void D2D1AppWindow::InitDeviceIndependentResources()
+{
+	TOF(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, IID_PPV_ARGS(&_pD2D1Factory)));
+}
 
+void D2D1AppWindow::OnResize(UINT width, UINT height)
+{
+	this->_size = D2D1_SIZE_U{ width, height };
+}
 
 void D2D1AppWindow::InitDeviceResources()
 {
@@ -100,9 +115,7 @@ void D2D1AppWindow::InitDeviceResources()
 		D2D1::HwndRenderTargetProperties(_hWnd, _size),
 		&_pRenderTarget
 	));
+
+	TOF(_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red), &_pBackgroundBrush));
 }
 
-void D2D1AppWindow::InitDeviceIndependentResources()
-{
-	TOF(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, IID_PPV_ARGS(&_pD2D1Factory)));
-}

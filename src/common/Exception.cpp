@@ -15,7 +15,7 @@ void ArgumentNullException::WriteToLog()
 	std::wofstream log;
 	log.open(L"errors.log", std::ofstream::app);
 
-	std::wstringstream log;
+	//std::wstringstream log;
 
 	log << L"--ArugmentNullException--";
 	log << L"\n\tfile='" << _filename << "'\n\tline=" << _line << "\n\targument='" << _argument << "'" << std::endl;
@@ -35,7 +35,7 @@ void ArgumentOutOfRangeException::WriteToLog()
 	std::wofstream log;
 	log.open(L"errors.log", std::ofstream::app);
 
-	std::wstringstream log;
+	//std::wstringstream log;
 
 	log << L"--ArgumentOutOfRangeException--";
 	log << L"\n\tfile='" << _filename << "'\n\tline=" << _line << "\n\targument='" << _argument << "'" << std::endl;
@@ -75,7 +75,7 @@ void InvalidOperationException::WriteToLog()
 	std::wofstream log;
 	log.open(L"errors.log", std::ofstream::app);
 
-	std::wstringstream log;
+	//std::wstringstream log;
 
 	log << L"--InvalidOperationException--";
 	log << L"\n\tfile='" << _filename << "'\n\tline=" << _line << "'" << std::endl;
@@ -95,7 +95,7 @@ void ContentValueRequiredException::WriteToLog()
 	std::wofstream log;
 	log.open(L"errors.log", std::ofstream::app);
 
-	std::wstringstream log;
+	//std::wstringstream log;
 
 	log << L"--ContentValueRequiredException--";
 	log << L"\n\tfile='" << _filename << "'\n\tline=" << _line << "'" << std::endl;
