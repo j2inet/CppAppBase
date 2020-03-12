@@ -78,8 +78,28 @@ void D2D1AppWindow::OnRender()
 	if (!_pRenderTarget)
 		return;
 	_pRenderTarget->BeginDraw();
-	_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Blue));
+	_pRenderTarget->Clear(_backgroundColor);
+	_pRenderTarget->FillRectangle(&_mySquare, _pPrimaryBrush.Get());
+	_pRenderTarget->DrawRectangle(&_mySquare, _pSecondaryBrush.Get());
 
+	for (auto current = _shapeList.begin(); current != _shapeList.end(); ++current)
+	{
+		ComPtr<ID2D1Brush> brush;
+		switch (current->paletteIndex)
+		{
+		case Primary: brush = _pPrimaryBrush; break;
+		case Secondary: brush = _pSecondaryBrush; break;
+		case Background: brush = _pBackgroundBrush; break;
+		default: brush = _pPrimaryBrush;
+		}
+		switch (current->shapeType)
+		{
+		case ShapeType::ShapeType_Rectangle:_pRenderTarget->FillRectangle(&current->rect, brush.Get()); break;
+		case ShapeType::ShapeType_Ellipse:_pRenderTarget->FillEllipse(&current->ellipse, brush.Get()); break;
+		}
+		
+	}
+	
 	hr = _pRenderTarget->EndDraw();
 	if (hr == D2DERR_RECREATE_TARGET)
 	{
@@ -97,15 +117,46 @@ void D2D1AppWindow::DiscardDeviceResources()
 	_pRenderTarget = nullptr;
 }
 
-void D2D1AppWindow::InitDeviceIndependentResources()
-{
-	TOF(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, IID_PPV_ARGS(&_pD2D1Factory)));
-}
-
 void D2D1AppWindow::OnResize(UINT width, UINT height)
 {
 	this->_size = D2D1_SIZE_U{ width, height };
+	if (_pRenderTarget)
+	{
+		_pRenderTarget->Resize(_size);
+	}
 }
+
+
+
+void D2D1AppWindow::InitDeviceIndependentResources()
+{
+	TOF(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, IID_PPV_ARGS(&_pD2D1Factory)));
+	_primaryColor = D2D1::ColorF(0.7843F, 0.0f, 0.0f, 1.0f);
+	_secondaryColor = D2D1::ColorF(0.09411, 0.09411, 0.08593, 1.0);
+	_backgroundColor = D2D1::ColorF(0.91014, 0.847655, 0.75f, 1.0);
+	_mySquare = { 20, 20, 30, 30 };
+
+	
+	_shapeList.push_back(ColoredShape::MakeRectangle({0,0,456,104 }, Primary));
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 0,128,456,550 }, Primary ));
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 488,0,508,110 }, Secondary ));
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 488,40,900,115 }, Secondary ));
+
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 530,130,850,180 }, Primary ));
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 530,190,850,240 }, Primary ));
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 530,250,850,300 }, Primary ));
+
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 0,350,600,450 }, Secondary ));
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 0,350,600,450 }, Secondary));
+
+	_shapeList.push_back(ColoredShape::MakeEllipse({ 570,400,60, 60 }, Secondary));
+	_shapeList.push_back(ColoredShape::MakeEllipse({ 570,400,57, 57 }, Background));
+	_shapeList.push_back(ColoredShape::MakeEllipse({ 570,400,55, 55 }, Secondary));
+	_shapeList.push_back(ColoredShape::MakeEllipse({ 570,400,52, 52 }, Background));
+
+	_shapeList.push_back(ColoredShape::MakeRectangle({ 476,470,870, 550 }, Secondary));
+}
+
 
 void D2D1AppWindow::InitDeviceResources()
 {
@@ -115,7 +166,9 @@ void D2D1AppWindow::InitDeviceResources()
 		D2D1::HwndRenderTargetProperties(_hWnd, _size),
 		&_pRenderTarget
 	));
-
-	TOF(_pRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red), &_pBackgroundBrush));
+	
+	TOF(_pRenderTarget->CreateSolidColorBrush(_primaryColor, &_pPrimaryBrush));
+	TOF(_pRenderTarget->CreateSolidColorBrush(_secondaryColor, &_pSecondaryBrush));
+	TOF(_pRenderTarget->CreateSolidColorBrush(_backgroundColor, &_pBackgroundBrush));
 }
 
