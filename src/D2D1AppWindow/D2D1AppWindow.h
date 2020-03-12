@@ -60,6 +60,7 @@ protected:
 	virtual void InitDeviceIndependentResources();
 	virtual void DiscardDeviceResources();
 	void CloseWindow() override;
+	void OnPaint() override;
 
 	void Idle() override;
 

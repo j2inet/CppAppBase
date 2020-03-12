@@ -158,6 +158,12 @@ void D2D1AppWindow::InitDeviceIndependentResources()
 }
 
 
+
+void D2D1AppWindow::OnPaint()
+{
+	this->OnRender();
+}
+
 void D2D1AppWindow::InitDeviceResources()
 {
 
