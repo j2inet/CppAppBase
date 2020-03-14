@@ -237,13 +237,13 @@ _pTextLayout->SetFontWeight(DWRITE_FONT_WEIGHT_EXTRA_LIGHT, range);
 
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 530,190,850,240 }, PaletteIndex_Secondary));
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 690,190,850,240 }, PaletteIndex_Primary));
-	_shapeList.push_back(std::make_shared<TextShape>(L"00:00.0", D2D1_RECT_F{ 530,190,850,240 }, TextStyle_Label, PaletteIndex_Primary));
-	_shapeList.push_back(std::make_shared<TextShape>(L"00:12.9", D2D1_RECT_F{ 690,190,850,240 }, TextStyle_Label, PaletteIndex_Background));
+	_shapeList.push_back(std::make_shared<TextShape>(L"ITEM TIME", D2D1_RECT_F{ 530,190,850,240 }, TextStyle_SmallText, PaletteIndex_Primary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"00:00.0", D2D1_RECT_F{ 690,190,850,240 }, TextStyle_Label, PaletteIndex_Background));
 
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 530,250,850,300 }, PaletteIndex_Secondary));
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 690,250,850,300 }, PaletteIndex_Primary));
-	_shapeList.push_back(std::make_shared<TextShape>(L"00:45.0", D2D1_RECT_F{ 530,250,850,300 }, TextStyle_Label, PaletteIndex_Primary));
-	_shapeList.push_back(std::make_shared<TextShape>(L"00:23.9", D2D1_RECT_F{ 690,250,850,300 }, TextStyle_Label, PaletteIndex_Background));
+	_shapeList.push_back(std::make_shared<TextShape>(L"FILES\r\nPROCESSED", D2D1_RECT_F{ 530,250,850,300 }, TextStyle_SmallText, PaletteIndex_Primary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"000", D2D1_RECT_F{ 690,250,850,300 }, TextStyle_Label, PaletteIndex_Background));
 
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 0,350,600,450 }, PaletteIndex_Secondary));
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 0,350,600,450 }, PaletteIndex_Secondary));

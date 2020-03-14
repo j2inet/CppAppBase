@@ -62,7 +62,6 @@ struct TextShape :public Shape {
 	{
 		this->textLayout = nullptr;
 	}
-
 	std::wstring text;
 	D2D1_RECT_F location;
 	TextStyle textStyle;
