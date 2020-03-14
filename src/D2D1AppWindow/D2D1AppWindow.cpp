@@ -144,6 +144,15 @@ void D2D1AppWindow::DiscardDeviceResources()
 {
 	_pBackgroundBrush = nullptr;
 	_pRenderTarget = nullptr;
+	for (auto current = _shapeList.begin(); current != _shapeList.end(); ++current)
+	{
+		if ((*current)->shapeType == ShapeType_Text)
+		{
+			std::shared_ptr<TextShape> textShape = std::static_pointer_cast<TextShape>(*current);
+			textShape->Dispose();
+
+		}
+	}
 }
 
 void D2D1AppWindow::OnResize(UINT width, UINT height)
@@ -176,6 +185,20 @@ void D2D1AppWindow::InitDeviceIndependentResources()
 		TEXT("en-us"),
 		&_pDefaultFont
 	));
+
+	//
+	TOF(_pWriteFactory->CreateTextFormat(
+		TEXT("Segoe UI"),	//font family
+		NULL,				//font collection
+		DWRITE_FONT_WEIGHT_EXTRA_BOLD,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		18.0f,
+		TEXT("en-us"),
+		&_pSmallLabel
+	));
+
+
 	TOF(_pDefaultFont->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER));
 	TOF(_pDefaultFont->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER));
 
@@ -195,23 +218,32 @@ _pTextLayout->SetFontWeight(DWRITE_FONT_WEIGHT_EXTRA_LIGHT, range);
 
 	
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{0,0,456,104 }, PaletteIndex_Primary));
-	_shapeList.push_back(std::make_shared<TextShape>(L"RESULTS", D2D1_RECT_F{ 0,0,440,104 }, TextStyle_Label, PaletteIndex_Secondary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"PROCESSING", D2D1_RECT_F{ 0,0,440,104 }, TextStyle_Label, PaletteIndex_Secondary));
 	
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 0,128,456,550 }, PaletteIndex_Primary));
-	_shapeList.push_back(std::make_shared<TextShape>(L"RESULTS 22", D2D1_RECT_F{ 0,128,456,550 }, TextStyle_Label, PaletteIndex_Secondary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"RESULTS\r\n234", D2D1_RECT_F{ 0,128,456,550 }, TextStyle_Label, PaletteIndex_Secondary, DWRITE_TEXT_ALIGNMENT_LEADING, DWRITE_PARAGRAPH_ALIGNMENT_NEAR));
+
 
 
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 488,0,508,110 }, PaletteIndex_Secondary ));
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 488,40,900,115 }, PaletteIndex_Secondary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"0000123456", D2D1_RECT_F{ 488,40,890,115 }, TextStyle_Label, PaletteIndex_Primary));
 
-	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 530,130,850,180 }, PaletteIndex_Secondary));
+
+	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 530,130,850,180 }, PaletteIndex_Secondary));	
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 690,130,850,180 }, PaletteIndex_Primary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"TOTAL\r\nTIME", D2D1_RECT_F{ 530,130,850,180 }, TextStyle_SmallText, PaletteIndex_Primary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"00:12.9", D2D1_RECT_F{ 690,134,850,180 }, TextStyle_Label, PaletteIndex_Background));
 
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 530,190,850,240 }, PaletteIndex_Secondary));
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 690,190,850,240 }, PaletteIndex_Primary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"00:00.0", D2D1_RECT_F{ 530,190,850,240 }, TextStyle_Label, PaletteIndex_Primary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"00:12.9", D2D1_RECT_F{ 690,190,850,240 }, TextStyle_Label, PaletteIndex_Background));
 
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 530,250,850,300 }, PaletteIndex_Secondary));
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 690,250,850,300 }, PaletteIndex_Primary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"00:45.0", D2D1_RECT_F{ 530,250,850,300 }, TextStyle_Label, PaletteIndex_Primary));
+	_shapeList.push_back(std::make_shared<TextShape>(L"00:23.9", D2D1_RECT_F{ 690,250,850,300 }, TextStyle_Label, PaletteIndex_Background));
 
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 0,350,600,450 }, PaletteIndex_Secondary));
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 0,350,600,450 }, PaletteIndex_Secondary));
@@ -220,6 +252,8 @@ _pTextLayout->SetFontWeight(DWRITE_FONT_WEIGHT_EXTRA_LIGHT, range);
 	_shapeList.push_back(std::make_shared<EllipseShape>(D2D1_ELLIPSE{ 570,400,57, 57 }, PaletteIndex_Background));
 	_shapeList.push_back(std::make_shared<EllipseShape>(D2D1_ELLIPSE{ 570,400,55, 55 }, PaletteIndex_Secondary));
 	_shapeList.push_back(std::make_shared<EllipseShape>(D2D1_ELLIPSE{ 570,400,52, 52 }, PaletteIndex_Background));
+
+	_shapeList.push_back(std::make_shared<TextShape>(L"99%", D2D1_RECT_F{ 510,330,630,460 }, TextStyle_Label, PaletteIndex_Primary, DWRITE_TEXT_ALIGNMENT_CENTER, DWRITE_PARAGRAPH_ALIGNMENT_CENTER));
 
 	_shapeList.push_back(std::make_shared<RectangleShape>(D2D1_RECT_F{ 476,470,870, 550 }, PaletteIndex_Secondary));
 
@@ -251,9 +285,15 @@ void D2D1AppWindow::InitDeviceResources()
 		{
 			std::shared_ptr<TextShape> textShape = std::static_pointer_cast<TextShape>(*current);
 			ComPtr<IDWriteTextFormat> textFormat = _pDefaultFont;
+			switch (textShape->textStyle)
+			{
+			case TextStyle_Label: textFormat = _pDefaultFont; break;
+			case TextStyle_SmallText: textFormat = _pSmallLabel; break;
+			}
 			_pWriteFactory->CreateTextLayout(textShape->text.c_str(), textShape->text.size(), textFormat.Get(), textShape->location.right - textShape->location.left, textShape->location.bottom - textShape->location.top, &textShape->textLayout);
-			textShape->textLayout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
-			textShape->textLayout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+			textShape->textLayout->SetTextAlignment(textShape->textAlignment);
+			textShape->textLayout->SetParagraphAlignment(textShape->paragraphAlignment);
+			
 		}
 	}
 }

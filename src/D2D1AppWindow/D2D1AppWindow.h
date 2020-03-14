@@ -19,16 +19,25 @@ enum ShapeType {
 };
 
 enum TextStyle {
-	TextStyle_Label = 0
+	TextStyle_Label = 0,
+	TextStyle_SmallText = 1
 };
 
-struct Shape {
+interface  IDispose {
+	virtual void Dispose() = 0;
+};
+
+struct Shape: public IDispose {
 	Shape() {}
 
 	Shape(ShapeType shapeType, PaletteIndex paletteIndex)
 	{
 		this->shapeType = shapeType;
 		this->paletteIndex = paletteIndex;
+	}
+	virtual void Dispose()
+	{
+
 	}
 	std::wstring tag;
 	ShapeType shapeType;
@@ -37,18 +46,29 @@ struct Shape {
 
 struct TextShape :public Shape {
 	TextShape() {}
-	TextShape(std::wstring text, D2D1_RECT_F location, TextStyle textStyle = TextStyle_Label, PaletteIndex palette = PaletteIndex_Primary)
+	TextShape(std::wstring text, D2D1_RECT_F location, TextStyle textStyle = TextStyle_Label, PaletteIndex palette = PaletteIndex_Primary, 
+		DWRITE_TEXT_ALIGNMENT textAlignment = DWRITE_TEXT_ALIGNMENT_LEADING, 
+		DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment = DWRITE_PARAGRAPH_ALIGNMENT_CENTER)
 		:Shape(ShapeType_Text, palette)
 	{
 		this->text = text;
 		this->location = location;
 		this->textStyle = textStyle;
+		this->paragraphAlignment = paragraphAlignment;
+		this->textAlignment = textAlignment;
+	}
+
+	void Dispose() override 
+	{
+		this->textLayout = nullptr;
 	}
 
 	std::wstring text;
 	D2D1_RECT_F location;
 	TextStyle textStyle;
 	ComPtr<IDWriteTextLayout> textLayout;
+	DWRITE_PARAGRAPH_ALIGNMENT paragraphAlignment;
+	DWRITE_TEXT_ALIGNMENT textAlignment;
 
 };
 
@@ -122,7 +142,7 @@ private:
 
 
 	ComPtr< IDWriteFactory> _pWriteFactory;
-	ComPtr<IDWriteTextFormat> _pDefaultFont;
+	ComPtr<IDWriteTextFormat> _pDefaultFont, _pSmallLabel;
 	ComPtr<IDWriteTextLayout> _pTextLayout;
 
 
