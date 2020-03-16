@@ -6,7 +6,9 @@
 #include "../common/Exception.h"
 
 
-D2D1AppWindow::D2D1AppWindow(HINSTANCE hInstance):AppWindow(hInstance)
+D2D1AppWindow::D2D1AppWindow(HINSTANCE hInstance) :AppWindow(hInstance),
+_alwaysRender(false),
+_renderWasRequested(true)
 {
 
 }
@@ -45,7 +47,18 @@ void D2D1AppWindow::Idle()
 {
 	AppWindow::Idle();
 	Update();
-	Render();
+	if(IsRenderNeeded())
+		Render();
+}
+
+void D2D1AppWindow::EnableAutoRender(boolean isEnabled)
+{
+	this->_alwaysRender = isEnabled;
+}
+
+void D2D1AppWindow::RequestRender()
+{
+	_renderWasRequested = true;
 }
 
 
@@ -70,6 +83,7 @@ void D2D1AppWindow::OnUpdate(FLOAT timeSinceLastUpdate, LONGLONG globalTimer)
 void D2D1AppWindow::Render()
 {
 	this->OnRender();
+	this->_renderWasRequested = false;
 }
 
 
@@ -264,6 +278,9 @@ _pTextLayout->SetFontWeight(DWRITE_FONT_WEIGHT_EXTRA_LIGHT, range);
 
 void D2D1AppWindow::OnPaint()
 {
+	PAINTSTRUCT ps;
+	HDC hDC = BeginPaint(_hWnd, &ps);
+	EndPaint(_hWnd, &ps);
 	this->OnRender();
 }
 

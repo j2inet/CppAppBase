@@ -121,12 +121,18 @@ protected:
 	virtual void OnRender();
 
 	void OnResize(UINT width, UINT height) override;
-
+	void RequestRender();
+	void EnableAutoRender(boolean isEnabled);
 private:
 	void Update();
 	void Render();
-
+	inline bool IsRenderNeeded()
+	{
+		return (_alwaysRender || _renderWasRequested);
+	}
 	D2D1_RECT_F _mySquare;
+	bool _alwaysRender;
+	bool _renderWasRequested;
 
 	std::vector<std::shared_ptr<Shape>> _shapeList;
 
