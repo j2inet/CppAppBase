@@ -87,6 +87,19 @@ void AppWindow::CreateAppWindow()
 	LONG_PTR l = GetWindowLongPtr(this->_hWnd, GWLP_USERDATA);
 }
 
+
+int AppWindow::GetClientWidth()
+{
+	auto rect = ClientRect();
+	return rect.right - rect.left;
+
+}
+int AppWindow::GetClientHeight()
+{
+	auto rect = ClientRect();
+	return rect.bottom - rect.top;
+}
+
 void AppWindow::OnPaint()
 {
 	PAINTSTRUCT ps;

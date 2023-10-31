@@ -18,6 +18,8 @@ public:
 	virtual void Init();
 	RECT ClientRect();
 	virtual int RunMessageLoop();
+	int GetClientWidth();
+	int GetClientHeight();
 protected:
 	HWND _hWnd;
 	HINSTANCE hInstance;
