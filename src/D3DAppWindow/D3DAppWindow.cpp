@@ -71,6 +71,8 @@ void D3DAppWindow::InitDeviceResources()
 	backBuffer->Release();
 
 	devcon->OMSetRenderTargets(1, backBufferTarget.GetAddressOf(), nullptr);
+
+	//dev->CreateInputLayout(&vertexColorLayout, 2, )
 }
 
 
@@ -101,7 +103,10 @@ void D3DAppWindow::InitD3D()
 }
 
 
-
+void D3DAppWindow::LoadShader(std::wstring filePath, std::wstring key)
+{
+	
+}
 
 void D3DAppWindow::Render()
 {

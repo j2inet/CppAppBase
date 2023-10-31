@@ -2,6 +2,7 @@
 
 #include "resource.h"
 #include "../CppAppBase/AppWindow.h"
+#include "VertexTypes.h"
 
 using namespace Microsoft::WRL;
 
@@ -16,6 +17,7 @@ public:
 	virtual void InitDeviceIndependentResources();
 	virtual void InitDeviceResources();
 	virtual void DiscardDeviceResources();
+	virtual void LoadShader(std::wstring filePath, std::wstring key);
 	virtual void Render();
 	virtual void SetViewport();
 
@@ -30,6 +32,7 @@ protected:
 	ComPtr<ID3D11DeviceContext> devcon;
 	ComPtr<ID3D11Texture2D> backBuffer;
 	ComPtr<ID3D11RenderTargetView> backBufferTarget;
+	ComPtr<ID3D11InputLayout> vertexColorLayout;
 
 	// function prototypes
 	void InitD3D();     // sets up and initializes Direct3D
