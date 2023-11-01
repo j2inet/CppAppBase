@@ -1,2 +1,4 @@
 .vs
 *.user
+/src/D2D1AppWindow/x64/Debug
+/src/D3DAppWindow/x64/Debug/D3DAppWindow.tlog

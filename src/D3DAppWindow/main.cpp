@@ -53,32 +53,24 @@ std::vector<std::wstring> loadFileLines(std::wstring sourceFileName)
         auto buffer = new char[fileSize + 1];
         ZeroMemory(buffer, fileSize + 1);
         DWORD bytesRead;
-        ReadFile(hFile, buffer, fileSizeHigh, &bytesRead, FALSE);
+        ReadFile(hFile, buffer, fileSize, &bytesRead, FALSE);
         CloseHandle(hFile);
         std::wstring fileContents = Str2Wstr(buffer);
-        auto  fileLines = split(fileContents, L"\n");
+        delete buffer;
+        retVal = split(fileContents, L"\n");
     }
+    return retVal;
+}
 
 
-    /*
-    if(hFile == INVALID_HANDLE)
-
-    
-    std::wstring line;
-    std::wifstream inputFile;    
-    inputFile.open(sourceFileName.c_str());
-    if (inputFile)
-    {        
-
-        std::locale utf8_locale(std::locale::empty(), new codecvt_utf8<wchar_t>);
-        inputFile.imbue(utf8_locale);
-        while (std::getline(inputFile, line))
-        {
-            retVal.push_back(line);
-        }
-    }
-    
-    */
+vector<unsigned char> LoadFileContents(std::wstring sourceFileName)
+{
+    HANDLE hFile = CreateFile(sourceFileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    DWORD fileSize = GetFileSize(hFile, NULL);
+    vector<unsigned char> retVal;
+    retVal.reserve(fileSize);
+    DWORD bytesRead;
+    ReadFile(hFile, retVal.data(), fileSize, &bytesRead, FALSE);
     return retVal;
 }
 
@@ -95,23 +87,21 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     std::map<std::wstring, ComPtr<ID3D10Blob>> shaderMap;
 
-
+    D3DAppWindow::GoToExeDirectory();
     auto shaderFileList = loadFileLines(L"shaderList.txt");
     for (auto it = shaderFileList.begin(); it != shaderFileList.end(); ++it)
     {
         auto parts = split(*it, L",");
-        if (parts.size() == 4)
+        if (parts.size() == 3)
         {
             std::wstring objName = parts[0];
-            std::wstring fileName = parts[1];
-            std::wstring entryPointName = parts[2];
-            std::wstring shaderVersion = parts[3];
+            std::wstring fileName = parts[1];            
+            std::wstring shaderVersion = parts[2];
 
-            ComPtr<ID3D10Blob> shaderBlob;
-            ComPtr<ID3DBlob> errorBlob;
-            D3DCompileFromFile(fileName.c_str(), 0, 0, (LPCSTR)entryPointName.c_str(), (LPCSTR)shaderVersion.c_str(), 0, 0, &shaderBlob, &errorBlob);
-            shaderMap.emplace(objName, shaderBlob);
+            std::wstring fileSource = fileName + L".cso";
+            auto contents = LoadFileContents(fileSource);
 
+           
 
         }
     }

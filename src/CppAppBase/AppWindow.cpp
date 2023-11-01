@@ -56,6 +56,16 @@ HWND AppWindow::CreateLabel(std::wstring caption, RECT position)
 	return hTextbox;
 }
 
+void AppWindow::GoToExeDirectory()
+{
+	TCHAR szPath[MAX_PATH];
+	GetModuleFileName(NULL, szPath, MAX_PATH);
+	std::wstring path = szPath;
+	std::wstring::size_type pos = path.find_last_of(L"\\/");
+	path = path.substr(0, pos);
+	SetCurrentDirectory(path.c_str());
+}
+
 void AppWindow::InitFailure()
 {
 	return;

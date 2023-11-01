@@ -20,6 +20,7 @@ public:
 	virtual int RunMessageLoop();
 	int GetClientWidth();
 	int GetClientHeight();
+	static void GoToExeDirectory();
 protected:
 	HWND _hWnd;
 	HINSTANCE hInstance;
@@ -27,6 +28,7 @@ protected:
 	void CreateAppWindow();
 	HWND CreateButton(std::wstring caption, RECT position, HMENU command=0, DWORD style = WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON);
 	HWND CreateLabel(std::wstring caption, RECT position);
+	
 	virtual void Idle();
 	virtual void InitFailure();
 	virtual void OnPaint();
