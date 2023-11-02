@@ -9,6 +9,8 @@
 #include <string>
 
 
+#include "SmartHandle.h"
+
 #define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING 
 
@@ -65,13 +67,19 @@ std::vector<std::wstring> loadFileLines(std::wstring sourceFileName)
 
 vector<unsigned char> LoadFileContents(std::wstring sourceFileName)
 {
-    HANDLE hFile = CreateFile(sourceFileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-    DWORD fileSize = GetFileSize(hFile, NULL);
     vector<unsigned char> retVal;
-    retVal.reserve(fileSize);
-    DWORD bytesRead;
-    ReadFile(hFile, retVal.data(), fileSize, &bytesRead, FALSE);
+    auto hFile = CreateFileHandle(sourceFileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hFile)
+    {
+        DWORD fileSize = GetFileSize(hFile.get(), NULL);
+
+        retVal.resize(fileSize);
+        DWORD bytesRead;
+        HRESULT result = ReadFile(hFile.get(), retVal.data(), fileSize, &bytesRead, FALSE);    
+    }
     return retVal;
+
+
 }
 
 

@@ -16,6 +16,12 @@
     <Filter Include="Source Files\Shaders">
       <UniqueIdentifier>{caf50e10-d1d0-43ac-a11f-68f2c078736a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{9e4e9742-344a-4208-9a00-cdf4f2632bf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{0d4a7e1d-c8ed-4cd0-84f0-28aa2741b7d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -41,6 +47,9 @@
     </ClInclude>
     <ClInclude Include="VertexTypes.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SmartHandle.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
