@@ -28,13 +28,14 @@ public:
 	virtual void SetViewport();
 	virtual void LoadShaders();
 	virtual void SetShaderSource(std::wstring sourceListFile);
+	virtual void CreateShaderResources();
 
 
 protected:
 	std::wstring GetWindowClassName() { return L"D3DAppWindow"; };
 
 
-	std::map<std::wstring, ComPtr<ID3D10PixelShader>> shaderMap;
+	std::map<std::wstring, ComPtr<ID3D11PixelShader>> shaderMap;
 	std::map<std::wstring, ComPtr<ID3DBlob>> shaderBlobMap;
 
 	ComPtr<IDXGISwapChain> swapchain;

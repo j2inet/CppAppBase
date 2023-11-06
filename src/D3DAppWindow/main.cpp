@@ -64,7 +64,7 @@ vector<unsigned char> LoadFileContents(std::wstring sourceFileName)
     return retVal;
 }
 
-
+/*
 vector<unsigned char> LoadFileContents(std::wstring sourceFileName)
 {
     vector<unsigned char> retVal;
@@ -80,6 +80,7 @@ vector<unsigned char> LoadFileContents(std::wstring sourceFileName)
     }
     return retVal;
 }
+*/
 
 
 

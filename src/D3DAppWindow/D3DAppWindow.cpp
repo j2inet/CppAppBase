@@ -105,6 +105,26 @@ void D3DAppWindow::SetShaderSource(std::wstring sourceListFile)
 	}
 }
 
+
+void D3DAppWindow::CreateShaderResources()
+{
+	for (auto const& [key, blob] : shaderBlobMap)
+	{
+		if (!shaderMap.contains(key))
+		{
+			//ComPtr<ID3D11PixelShader> shader;
+			ComPtr<ID3D11VertexShader> vertexShader;
+			ComPtr<ID3D11PixelShader> pixelShader;
+			auto size = blob->GetBufferSize();
+			//HRESULT result = dev->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(),nullptr,  &shader);
+			HRESULT result = dev->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &pixelShader);
+			//shaderMap.emplace(key, vertexShader);
+
+		}
+	}
+}
+
+
 void D3DAppWindow::InitDeviceIndependentResources()
 {
 
@@ -144,6 +164,7 @@ void D3DAppWindow::InitDeviceResources()
 	backBuffer->Release();
 
 	devcon->OMSetRenderTargets(1, backBufferTarget.GetAddressOf(), nullptr);
+	CreateShaderResources();
 
 	//dev->CreateInputLayout(&vertexColorLayout, 2, )
 }
