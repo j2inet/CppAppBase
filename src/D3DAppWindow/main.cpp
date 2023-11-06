@@ -18,28 +18,11 @@ using namespace std;
 
 
 // for string delimiter
-std::vector<std::wstring> split(std::wstring s, std::wstring delimiter) {
-    size_t pos_start = 0, pos_end, delim_len = delimiter.length();
-    std::wstring token;
-    std::vector<std::wstring> res;
-    while ((pos_end = s.find(delimiter, pos_start)) != std::string::npos) {
-        token = s.substr(pos_start, pos_end - pos_start);
-        pos_start = pos_end + delim_len;
-        res.push_back(token);
-    }
-    res.push_back(s.substr(pos_start));
-    return res;
-}
-
-std::wstring Str2Wstr(const std::string& str)
-{
-    int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
-    std::wstring wstrTo(size_needed, 0);
-    MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
-    return wstrTo;
-}
 
 
+
+
+/*
 std::vector<std::wstring> loadFileLines(std::wstring sourceFileName)
 {
     std::vector<std::wstring> retVal;
@@ -63,6 +46,7 @@ std::vector<std::wstring> loadFileLines(std::wstring sourceFileName)
     }
     return retVal;
 }
+*/
 
 
 vector<unsigned char> LoadFileContents(std::wstring sourceFileName)
@@ -111,28 +95,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     std::map<std::wstring, ComPtr<ID3D10Blob>> shaderMap;
 
     D3DAppWindow::GoToExeDirectory();
-    auto shaderFileList = loadFileLines(L"shaderList.txt");
-    for (auto it = shaderFileList.begin(); it != shaderFileList.end(); ++it)
-    {
-        auto parts = split(*it, L",");
-        if (parts.size() == 3)
-        {
-            std::wstring objName = parts[0];
-            std::wstring fileName = parts[1];            
-            std::wstring shaderVersion = parts[2];
-
-            std::wstring fileSource = fileName + L".cso";
-            auto contents = LoadFileContents(fileSource);
-
-           
-
-        }
-    }
+    
+    
 
     if (FAILED(CoInitialize(NULL)))
         return -1;
 
-    std::shared_ptr<AppWindow> appWindow = std::make_shared<D3DAppWindow>(hInstance);
+    std::shared_ptr<D3DAppWindow> appWindow = std::make_shared<D3DAppWindow>(hInstance);
+    appWindow->SetShaderSource(L"shaderList.txt");
     appWindow->Init();
     appWindow->RunMessageLoop();
 
