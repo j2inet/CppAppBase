@@ -78,8 +78,23 @@ vector<unsigned char> LoadFileContents(std::wstring sourceFileName)
         HRESULT result = ReadFile(hFile.get(), retVal.data(), fileSize, &bytesRead, FALSE);    
     }
     return retVal;
+}
 
 
+vector<unsigned char> LoadFileContents(std::wstring sourceFileName)
+{
+    vector<unsigned char> retVal;
+    auto hFile = CreateFile(sourceFileName.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hFile != INVALID_HANDLE_VALUE)
+    {
+        DWORD fileSize = GetFileSize(hFile, NULL);
+
+        retVal.resize(fileSize);
+        DWORD bytesRead;
+        HRESULT result = ReadFile(hFile, retVal.data(), fileSize, &bytesRead, FALSE);
+        CloseHandle(hFile);
+    }
+    return retVal;
 }
 
 

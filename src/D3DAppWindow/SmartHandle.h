@@ -7,7 +7,7 @@ struct HANDLECloser
 {
 	void operator()(HANDLE handle) const
 	{
-		if (handle != INVALID_HANDLE_VALUE)
+		if (handle != INVALID_HANDLE_VALUE && handle != 0)
 		{
 			CloseHandle(handle);
 		}
