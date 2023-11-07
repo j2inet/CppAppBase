@@ -35,8 +35,11 @@ protected:
 	std::wstring GetWindowClassName() { return L"D3DAppWindow"; };
 
 
-	std::map<std::wstring, ComPtr<ID3D11PixelShader>> shaderMap;
-	std::map<std::wstring, ComPtr<ID3DBlob>> shaderBlobMap;
+	std::map<std::wstring, ComPtr<ID3D11PixelShader>> pixelShaderMap;
+	std::map<std::wstring, ComPtr<ID3D11VertexShader>> vertexShaderMap;
+
+	std::map<std::wstring, ComPtr<ID3DBlob>> pixelShaderBlobMap;
+	std::map<std::wstring, ComPtr<ID3DBlob>> vertexShaderBlobMap;
 
 	ComPtr<IDXGISwapChain> swapchain;
 	ComPtr<ID3D11Device> dev;

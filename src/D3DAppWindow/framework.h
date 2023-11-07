@@ -14,3 +14,6 @@
 #include <d3dcompiler.h>
 #include <vector>
 #include <string>
+
+#include "StringConverter.h"
+#include "ErrorLogger.h"

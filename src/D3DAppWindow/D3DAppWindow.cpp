@@ -93,14 +93,26 @@ void D3DAppWindow::SetShaderSource(std::wstring sourceListFile)
 		{
 			std::wstring objName = parts[0];
 			std::wstring fileName = parts[1];
-			std::wstring shaderVersion = parts[2];
+			std::wstring shaderType = parts[2];
 
 			std::wstring fileSource = fileName + L".cso";
-			ComPtr<ID3D11PixelShader> ps;
-			ComPtr<ID3DBlob> blob;
-
-			D3DReadFileToBlob(fileSource.c_str(), &blob);
-			shaderBlobMap.emplace(objName, blob);
+			
+			if (shaderType == StringConverter::Str2Wstr("ps"))
+			{
+				ComPtr<ID3DBlob> blob;
+				D3DReadFileToBlob(fileSource.c_str(), &blob);
+				pixelShaderBlobMap.emplace(objName, blob);				
+			}
+			else if (shaderType == StringConverter::Str2Wstr("vs"))
+			{
+				ComPtr<ID3DBlob> blob;
+				D3DReadFileToBlob(fileSource.c_str(), &blob);
+				vertexShaderBlobMap.emplace(objName, blob);
+			}
+			else
+			{
+				Logger::Log(L"Unknown shader type: " + shaderType);
+			}
 		}
 	}
 }
@@ -108,18 +120,39 @@ void D3DAppWindow::SetShaderSource(std::wstring sourceListFile)
 
 void D3DAppWindow::CreateShaderResources()
 {
-	for (auto const& [key, blob] : shaderBlobMap)
+	for (auto const& [key, blob] : pixelShaderBlobMap)
 	{
-		if (!shaderMap.contains(key))
+		if (!pixelShaderMap.contains(key))
 		{
-			//ComPtr<ID3D11PixelShader> shader;
-			ComPtr<ID3D11VertexShader> vertexShader;
 			ComPtr<ID3D11PixelShader> pixelShader;
 			auto size = blob->GetBufferSize();
-			//HRESULT result = dev->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(),nullptr,  &shader);
 			HRESULT result = dev->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &pixelShader);
-			//shaderMap.emplace(key, vertexShader);
-
+			if (!FAILED(result))
+			{
+				OutputDebugString(L"Created vertex shader");
+			}
+			else
+			{
+				OutputDebugString(L"Failed to create vertex shader");
+			}
+		}
+	}
+	for (auto const& [key, blob] : vertexShaderBlobMap)
+	{
+		ComPtr<ID3D11PixelShader> vertexShader;
+		if (!vertexShaderMap.contains(key))
+		{
+			ComPtr<ID3D11VertexShader> vertexShader;
+			auto size = blob->GetBufferSize();
+			HRESULT result = dev->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &vertexShader);
+			if (!FAILED(result))
+			{
+				OutputDebugString(L"Created vertex shader");
+			}
+			else
+			{
+				OutputDebugString(L"Failed to create vertex shader");
+			}
 		}
 	}
 }

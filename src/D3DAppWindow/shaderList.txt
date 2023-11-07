@@ -1,1 +1,2 @@
-MyVShader,basicVertexShader,vs_4_0
+MyVShader,basicVertexShader,vs
+MyPShader,basicPixelShader,ps
