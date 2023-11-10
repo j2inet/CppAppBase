@@ -1,6 +1,8 @@
+#pragma enable_d3d11_debug_symbols
+
 struct VSIn
 {
-	float4 position : POSITION;
+	float3 position : POSITION;
 	float4 color : COLOR;
 };
 
@@ -14,7 +16,7 @@ struct VSOut
 VSOut main(VSIn input)
 {
 	VSOut output;
-	output.position = input.position;
+	output.position = float4(input.position, 0.0f);
 	output.color = input.color;
 	return output;
 }

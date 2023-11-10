@@ -28,8 +28,9 @@ void Sample3DApp::InitDeviceResources()
 	devcon->IASetInputLayout(inputLayout.Get());
 
 	D3D11_BUFFER_DESC vertexBufferDesc = {};
+	const UINT BUFFER_SIZE = sizeof(VERTEX_COLORED) * 3;
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDesc.ByteWidth = sizeof(VERTEX_COLORED) * 3;
+	vertexBufferDesc.ByteWidth = BUFFER_SIZE;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	result = dev->CreateBuffer(&vertexBufferDesc, NULL, &vertexBuffer);
@@ -42,7 +43,9 @@ void Sample3DApp::InitDeviceResources()
 	TOF(result = devcon->Map(vertexBuffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedResource));
 	if (SUCCEEDED(result))
 	{
-		_memccpy(mappedResource.pData, vertices, 0, sizeof(vertices));
+		const UINT VERTICIES_SIZE = sizeof(vertices) ;
+		//_memccpy(mappedResource.pData, vertices, 0, VERTICIES_SIZE);
+		memcpy(mappedResource.pData, vertices, VERTICIES_SIZE);
 		devcon->Unmap(vertexBuffer.Get(), NULL);
 	}
 	else
