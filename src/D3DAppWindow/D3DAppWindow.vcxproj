@@ -158,7 +158,7 @@
     <ClInclude Include="ErrorLogger.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="Headers\Input\Keyboard.h" />
+    <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="layout\PositionColorLayout.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />

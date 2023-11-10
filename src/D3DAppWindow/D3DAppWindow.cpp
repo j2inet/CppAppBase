@@ -146,8 +146,7 @@ void D3DAppWindow::CreateShaderResources()
 		}
 	}
 	for (auto const& [key, blob] : vertexShaderBlobMap)
-	{
-		ComPtr<ID3D11PixelShader> vertexShader;
+	{		
 		if (!vertexShaderMap.contains(key))
 		{
 			ComPtr<ID3D11VertexShader> vertexShader;
@@ -185,11 +184,9 @@ void D3DAppWindow::InitDeviceResources()
 {
 	// create a struct to hold information about the swap chain
 	DXGI_SWAP_CHAIN_DESC scd = { 0 };
-	// clear out the struct for use	
-	// fill the swap chain description struct
-	scd.BufferCount = 1;                                   // one back buffer
+	scd.BufferCount = 2;                                   // one back buffer
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;    // use 32-bit color
-	scd.BufferDesc.Width = GetClientWidth();                   // set the back buffer width
+	scd.BufferDesc.Width = GetClientWidth();                   // set the back buffer width	
 	scd.BufferDesc.Height = GetClientHeight();                 // set the back buffer height
 	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;     // how swap chain is to be used
 	scd.OutputWindow = _hWnd;                           // the window to be used
@@ -197,33 +194,41 @@ void D3DAppWindow::InitDeviceResources()
 	scd.Windowed = TRUE;                                    // windowed/full-screen mode
 	scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;     // allow full-screen switching
 	// create a device, device context and swap chain using the information in the scd struct
+	DWORD createFlags = (IsDebugEnabled()) ? D3D11_CREATE_DEVICE_DEBUG : 0;
+	D3D_FEATURE_LEVEL lvl[] = {
+	D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0,
+	D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
+	D3D_FEATURE_LEVEL_9_3, D3D_FEATURE_LEVEL_9_2, D3D_FEATURE_LEVEL_9_1 };
+	D3D_FEATURE_LEVEL featureLevel;
 	TOF(D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		(IsDebugEnabled()) ? D3D11_CREATE_DEVICE_DEBUG : 0,
-		NULL,
-		NULL,
+		createFlags,
+		lvl,
+		_countof(lvl),
 		D3D11_SDK_VERSION,
 		&scd,
 		&swapchain,
 		&dev,
-		NULL,
+		&featureLevel,
 		&devcon));
-
+	//auto  featureLevel = dev->GetFeatureLevel();
 	TOF(swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer));
 	TOF(dev->CreateRenderTargetView(backBuffer.Get(), NULL, backBufferTarget.GetAddressOf()));
 	TOF(backBuffer->Release());
-
 	devcon->OMSetRenderTargets(1, backBufferTarget.GetAddressOf(), nullptr);
+	SetViewport();
 	CreateShaderResources();
+	InitPipeline();
 }
 
 
 void D3DAppWindow::DiscardDeviceResources()
 {
-	swapchain->Release();
-	dev->Release();
-	devcon->Release();
+	swapchain->SetFullscreenState(FALSE, NULL);    // switch to windowed mode
+	//swapchain->Release();
+	//dev->Release();
+	//devcon->Release();
 }
 
 
@@ -232,10 +237,10 @@ void D3DAppWindow::Idle()
 	LARGE_INTEGER currentPerformanceValue;
 	QueryPerformanceCounter(&currentPerformanceValue);
 	DOUBLE elapsedSeconds = static_cast<DOUBLE>(currentPerformanceValue.QuadPart - _lastPerformanceValue.QuadPart) / _performanceFrequency;
-	if (elapsedSeconds > 1.0 / 60.0) {
+	if (elapsedSeconds > 1.0 / 61.0) {
 		_lastPerformanceValue = currentPerformanceValue;
 		Render();
-		swapchain->Present(0, 0);
+		++_frameNumber.QuadPart;		
 	}
 }
 
@@ -260,6 +265,7 @@ void D3DAppWindow::Render()
 {
 	FLOAT backgroundColor[4] = {0.0f, 0.2f, 0.4f, 1.0f};
 	devcon->ClearRenderTargetView(backBufferTarget.Get(), backgroundColor);
+	swapchain->Present(0, 0);
 }
 
 void D3DAppWindow::SetViewport()
@@ -267,5 +273,6 @@ void D3DAppWindow::SetViewport()
 	D3D11_VIEWPORT viewport = { 0 };
 	RECT clientRect = this->ClientRect();
 	viewport.Width = static_cast<FLOAT>(clientRect.right - clientRect.left);
+	viewport.Height = static_cast<FLOAT>(clientRect.bottom - clientRect.top);
 	devcon->RSSetViewports(1, &viewport);
 }

@@ -54,8 +54,11 @@ protected:
 	virtual void InitPipeline() = 0;     // loads and prepares the shaders
 	void DiscardD3D(void);         // closes Direct3D and releases memory
 	bool IsDebugEnabled() { return _enableDebug;  }
+	LARGE_INTEGER GetFRameNumber() { return _frameNumber; }
 private:	
 	LARGE_INTEGER _lastPerformanceValue;
+	LARGE_INTEGER _frameNumber = { 0 };
+
 	DOUBLE  _performanceFrequency;
 	bool _enableDebug;
 };

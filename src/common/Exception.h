@@ -1,6 +1,7 @@
 #pragma once
 #include "framework.h"
 #include <stdint.h>
+#include "ErrorLogger.h"
 
 
 
@@ -94,6 +95,9 @@ private:
 inline HRESULT TOF(HRESULT hr)
 {
 	if (FAILED(hr))
+	{
+		Logger::Log("HRESULT returned failure", hr);
 		ThrowCOMException(hr);
+	}
 	return hr;
 }
