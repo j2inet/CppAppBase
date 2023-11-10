@@ -3,7 +3,7 @@
 #include <string>
 #include "resource.h"
 #include "../CppAppBase/AppWindow.h"
-#include "VertexTypes.h"
+#include "layout/VertexTypes.h"
 #include "SmartHandle.h"
 
 using namespace Microsoft::WRL;
@@ -15,7 +15,7 @@ std::vector<std::wstring> loadFileLines(std::wstring sourceFileName);
 
 class D3DAppWindow : public AppWindow {
 public:
-	D3DAppWindow(HINSTANCE hInstance);
+	D3DAppWindow(HINSTANCE hInstance, bool EnableDebug = false);
 	~D3DAppWindow();
 
 	void Idle() override;
@@ -51,9 +51,11 @@ protected:
 
 	// function prototypes
 	void InitD3D();     // sets up and initializes Direct3D
+	virtual void InitPipeline() = 0;     // loads and prepares the shaders
 	void DiscardD3D(void);         // closes Direct3D and releases memory
-
+	bool IsDebugEnabled() { return _enableDebug;  }
 private:	
 	LARGE_INTEGER _lastPerformanceValue;
 	DOUBLE  _performanceFrequency;
+	bool _enableDebug;
 };

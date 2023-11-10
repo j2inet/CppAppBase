@@ -1,6 +1,9 @@
 // D3DAppWindow.cpp : Defines the entry point for the application.
 //
 #include "framework.h"
+#include <cctype>
+#include <string>
+#include <format>
 #include "D3DAppWindow.h"
 #include "../common/Exception.h"
 #include "pch.h"
@@ -53,7 +56,7 @@ std::wstring Str2Wstr(const std::string& str)
 	return wstrTo;
 }
 
-D3DAppWindow::D3DAppWindow(HINSTANCE hInstance) : AppWindow(hInstance)
+D3DAppWindow::D3DAppWindow(HINSTANCE hInstance, bool EnableDebug) : AppWindow(hInstance)
 {
 
 }
@@ -73,8 +76,7 @@ void D3DAppWindow::Init()
 	LARGE_INTEGER performanceFrequency;
 	QueryPerformanceFrequency(&performanceFrequency);
 	this->_performanceFrequency = static_cast<DOUBLE>(performanceFrequency.QuadPart);
-	QueryPerformanceCounter(&_lastPerformanceValue);
-	//InitDeviceResources();
+	QueryPerformanceCounter(&_lastPerformanceValue);	
 }
 
 
@@ -94,6 +96,9 @@ void D3DAppWindow::SetShaderSource(std::wstring sourceListFile)
 			std::wstring objName = parts[0];
 			std::wstring fileName = parts[1];
 			std::wstring shaderType = parts[2];
+			if(shaderFileList.size() > 0 && shaderType[shaderType.size() - 1] == L'\r')
+				shaderType.erase(shaderType.size() - 1);
+			//shaderType.erase(std::remove_if(shaderType.begin(), shaderType.end(), std::isspace), shaderType.end());
 
 			std::wstring fileSource = fileName + L".cso";
 			
@@ -129,11 +134,14 @@ void D3DAppWindow::CreateShaderResources()
 			HRESULT result = dev->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &pixelShader);
 			if (!FAILED(result))
 			{
-				OutputDebugString(L"Created vertex shader");
+				auto msg = std::format(L"Created pixel shader {}\r\n", key);
+				OutputDebugString(msg.c_str());
+				pixelShaderMap.emplace(key, pixelShader);
 			}
 			else
 			{
-				OutputDebugString(L"Failed to create vertex shader");
+				auto msg = std::format(L"Failed to create pixel shader {}\r\n", key);
+				OutputDebugString(msg.c_str());
 			}
 		}
 	}
@@ -147,14 +155,24 @@ void D3DAppWindow::CreateShaderResources()
 			HRESULT result = dev->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), NULL, &vertexShader);
 			if (!FAILED(result))
 			{
-				OutputDebugString(L"Created vertex shader");
+				auto msg = std::format(L"Created vertex shader {}\r\n", key);
+				OutputDebugString(msg.c_str());
+				vertexShaderMap.emplace(key, vertexShader);
 			}
 			else
 			{
-				OutputDebugString(L"Failed to create vertex shader");
+				auto msg = std::format(L"Failed to create vertex shader {}\r\n", key);
+				OutputDebugString(msg.c_str());
 			}
 		}
 	}
+}
+
+
+void D3DAppWindow::InitPipeline()
+{
+	devcon->VSSetShader(vertexShaderMap.at(L"vertexShader").Get(), 0, 0);
+	devcon->PSSetShader(pixelShaderMap.at(L"pixelShader").Get(), 0, 0);
 }
 
 
@@ -182,7 +200,7 @@ void D3DAppWindow::InitDeviceResources()
 	TOF(D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		NULL,
+		(IsDebugEnabled()) ? D3D11_CREATE_DEVICE_DEBUG : 0,
 		NULL,
 		NULL,
 		D3D11_SDK_VERSION,
@@ -192,14 +210,12 @@ void D3DAppWindow::InitDeviceResources()
 		NULL,
 		&devcon));
 
-	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
-	dev->CreateRenderTargetView(backBuffer.Get(), NULL, backBufferTarget.GetAddressOf());
-	backBuffer->Release();
+	TOF(swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer));
+	TOF(dev->CreateRenderTargetView(backBuffer.Get(), NULL, backBufferTarget.GetAddressOf()));
+	TOF(backBuffer->Release());
 
 	devcon->OMSetRenderTargets(1, backBufferTarget.GetAddressOf(), nullptr);
 	CreateShaderResources();
-
-	//dev->CreateInputLayout(&vertexColorLayout, 2, )
 }
 
 

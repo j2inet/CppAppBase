@@ -159,12 +159,14 @@
     <ClInclude Include="Exception.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Headers\Input\Keyboard.h" />
+    <ClInclude Include="layout\PositionColorLayout.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Sample3DApp.h" />
     <ClInclude Include="SmartHandle.h" />
     <ClInclude Include="StringConverter.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="VertexTypes.h" />
+    <ClInclude Include="layout\VertexTypes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CppAppBase\AppWindow.cpp" />
@@ -180,9 +182,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Sample3DApp.cpp" />
     <ClCompile Include="SmartHandle.cpp.cpp" />
     <ClCompile Include="StringConverter.cpp" />
-    <ClCompile Include="VertexTypes.cpp" />
+    <ClCompile Include="layout\VertexTypes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="D3DAppWindow.rc" />

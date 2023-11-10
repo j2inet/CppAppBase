@@ -10,6 +10,7 @@
 
 
 #include "SmartHandle.h"
+#include "Sample3DApp.h"
 
 #define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 #define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING 
@@ -102,8 +103,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     if (FAILED(CoInitialize(NULL)))
         return -1;
 
-    std::shared_ptr<D3DAppWindow> appWindow = std::make_shared<D3DAppWindow>(hInstance);
-    appWindow->SetShaderSource(L"shaderList.txt");
+    std::shared_ptr<D3DAppWindow> appWindow = std::make_shared<Sample3DApp>(hInstance);    
     appWindow->Init();
     appWindow->RunMessageLoop();
 
