@@ -3,7 +3,7 @@
 #include "StringConverter.h"
 
 
-class Logger
+class ErrorLogger
 {
 public:
 	static void Log(std::string message);
