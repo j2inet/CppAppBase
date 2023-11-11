@@ -19,7 +19,7 @@ public:
 	~D3DAppWindow();
 
 	void Idle() override;
-	void Init() override;
+	void Init() override;	
 	virtual void InitDeviceIndependentResources();
 	virtual void InitDeviceResources();
 	virtual void DiscardDeviceResources();

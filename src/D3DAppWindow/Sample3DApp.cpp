@@ -28,7 +28,7 @@ void Sample3DApp::InitDeviceResources()
 	devcon->IASetInputLayout(inputLayout.Get());
 
 	D3D11_BUFFER_DESC vertexBufferDesc = {};
-	const UINT BUFFER_SIZE = sizeof(VERTEX_COLORED) * 3;
+	const UINT BUFFER_SIZE = sizeof(VERTEX_COLORED) * 6;
 	vertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	vertexBufferDesc.ByteWidth = BUFFER_SIZE;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -51,7 +51,7 @@ void Sample3DApp::InitDeviceResources()
 	else
 	{
 		Logger::Log("Failed to map vertex buffer", result);
-		return;
+		TOF(result);
 	}
 
 	D3D11_BUFFER_DESC bufferDesc;
@@ -60,13 +60,12 @@ void Sample3DApp::InitDeviceResources()
 	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
 	bufferDesc.MiscFlags = 0;
-	// Define the resource data.
+
 	D3D11_SUBRESOURCE_DATA InitData;
 	InitData.pSysMem = triangleList;
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
-	TOF(dev->CreateBuffer(&bufferDesc, &InitData, &indexBuffer));
-	//devcon->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	TOF(dev->CreateBuffer(&bufferDesc, &InitData, &indexBuffer));	
 }
 
 void Sample3DApp::InitPipeline()
@@ -78,17 +77,16 @@ void Sample3DApp::InitPipeline()
 	devcon->PSSetShader(pixelShaderMap.at(L"MyPShader").Get(), 0, 0);
 	devcon->IASetInputLayout(inputLayout.Get());
 }
+
 void Sample3DApp::Render()
 {
 	FLOAT backgroundColor[4] = { 0.1f, 0.1f, 0.2f, 1.0f };
 	devcon->ClearRenderTargetView(backBufferTarget.Get(), backgroundColor);
 	UINT stride = sizeof(VERTEX_COLORED);
 	UINT offset = 0;
-	HRESULT result;	
 	InitPipeline();
 	devcon->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//devcon->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	devcon->Draw(3, 0);	
+	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);	
+	devcon->Draw(6, 0);	
 	swapchain->Present(0, 0);
 }
