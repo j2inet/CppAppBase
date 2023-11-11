@@ -1,9 +1,8 @@
-#include "framework.h"
 #include "Exception.h"
-
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <Windows.h>
 
 ArgumentNullException::ArgumentNullException(const wchar_t* file, uint32_t line, const wchar_t* argument)
 	: _filename(file), _line(line), _argument(argument)

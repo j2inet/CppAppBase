@@ -1,9 +1,9 @@
 #include "framework.h"
 #include "Sample3DApp.h"
-#include "ErrorLogger.h"
-#include "StringConverter.h"
+#include "../common/Exception.h"
+#include "../common/StringConverter.h"
 #include "layout/VertexTypes.h"
-#include "Exception.h"
+#include "../common/ErrorLogger.h"
 
 
 Sample3DApp::Sample3DApp(HINSTANCE hInstance)
@@ -36,7 +36,7 @@ void Sample3DApp::InitDeviceResources()
 	result = dev->CreateBuffer(&vertexBufferDesc, NULL, &vertexBuffer);
 	if (!SUCCEEDED(result))
 	{
-		Logger::Log("Failed to create vertex buffer", result);
+		ErrorLogger::Log("Failed to create vertex buffer", result);
 		TOF(result);
 	}
 	D3D11_MAPPED_SUBRESOURCE mappedResource = { 0 };
@@ -50,7 +50,7 @@ void Sample3DApp::InitDeviceResources()
 	}
 	else
 	{
-		Logger::Log("Failed to map vertex buffer", result);
+		ErrorLogger::Log("Failed to map vertex buffer", result);
 		TOF(result);
 	}
 

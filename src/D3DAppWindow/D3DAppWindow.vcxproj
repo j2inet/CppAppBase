@@ -153,10 +153,10 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\ErrorLogger.h" />
+    <ClInclude Include="..\common\Exception.h" />
     <ClInclude Include="..\CppAppBase\AppWindow.h" />
     <ClInclude Include="D3DAppWindow.h" />
-    <ClInclude Include="ErrorLogger.h" />
-    <ClInclude Include="Exception.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="layout\PositionColorLayout.h" />
@@ -164,17 +164,17 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Sample3DApp.h" />
     <ClInclude Include="SmartHandle.h" />
-    <ClInclude Include="StringConverter.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="layout\VertexTypes.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\ErrorLogger.cpp" />
+    <ClCompile Include="..\common\Exception.cpp" />
+    <ClCompile Include="..\common\StringConverter.cpp" />
     <ClCompile Include="..\CppAppBase\AppWindow.cpp" />
     <ClCompile Include="D3DAppWindow.cpp" />
-    <ClCompile Include="Exception.cpp" />
     <ClCompile Include="framework.cpp" />
     <ClCompile Include="Input\Keyboard.cpp" />
-    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -184,7 +184,6 @@
     </ClCompile>
     <ClCompile Include="Sample3DApp.cpp" />
     <ClCompile Include="SmartHandle.cpp.cpp" />
-    <ClCompile Include="StringConverter.cpp" />
     <ClCompile Include="layout\VertexTypes.cpp" />
   </ItemGroup>
   <ItemGroup>

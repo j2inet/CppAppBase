@@ -116,7 +116,7 @@ void D3DAppWindow::SetShaderSource(std::wstring sourceListFile)
 			}
 			else
 			{
-				Logger::Log(L"Unknown shader type: " + shaderType);
+				ErrorLogger::Log(L"Unknown shader type: " + shaderType);
 			}
 		}
 	}

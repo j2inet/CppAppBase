@@ -15,5 +15,5 @@
 #include <vector>
 #include <string>
 
-#include "StringConverter.h"
-#include "ErrorLogger.h"
+#include "../common/StringConverter.h"
+#include "../common/ErrorLogger.h"
