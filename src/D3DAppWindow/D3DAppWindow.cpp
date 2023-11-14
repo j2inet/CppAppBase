@@ -48,6 +48,16 @@ std::vector<std::wstring> split(std::wstring s, std::wstring delimiter) {
 	return res;
 }
 
+void D3DAppWindow::OnResize(UINT width, UINT height)
+{
+		AppWindow::OnResize(width, height);
+		if (this->dev != nullptr && this->swapchain != nullptr)
+		{
+		DiscardDeviceResources();
+		this->swapchain->ResizeBuffers(2, GetClientWidth(), GetClientHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+		this->InitDeviceResources();
+	}
+}
 std::wstring Str2Wstr(const std::string& str)
 {
 	int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
@@ -226,6 +236,12 @@ void D3DAppWindow::InitDeviceResources()
 void D3DAppWindow::DiscardDeviceResources()
 {
 	swapchain->SetFullscreenState(FALSE, NULL);    // switch to windowed mode
+	pixelShaderMap.clear();
+	vertexShaderMap.clear();
+	backBufferTarget = nullptr;
+	devcon = nullptr;
+	dev = nullptr;
+
 	//swapchain->Release();
 	//dev->Release();
 	//devcon->Release();

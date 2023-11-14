@@ -68,6 +68,16 @@ void Sample3DApp::InitDeviceResources()
 	TOF(dev->CreateBuffer(&bufferDesc, &InitData, &indexBuffer));	
 }
 
+
+
+void Sample3DApp::DiscardDeviceResources()
+{
+	inputLayout = nullptr;
+	vertexBuffer = nullptr;
+	backBufferTarget = nullptr;
+	D3DAppWindow::DiscardDeviceResources();
+}
+
 void Sample3DApp::InitPipeline()
 {
 	//D3DAppWindow::InitPipeline();

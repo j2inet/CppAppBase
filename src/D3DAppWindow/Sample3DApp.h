@@ -10,6 +10,7 @@ public:
 
 protected:
 	void InitPipeline() override;
+	void DiscardDeviceResources() override;
 
 	ComPtr<ID3D11Buffer> vertexBuffer;
 	ComPtr< ID3D11InputLayout> inputLayout;

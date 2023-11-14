@@ -9,7 +9,7 @@ VOut main(float4 position : POSITION, float4 color : COLOR)
     VOut output;
 
     output.position = position;
-    output.color = color;
+    output.color = 1 - color;
 
     return output;
 }

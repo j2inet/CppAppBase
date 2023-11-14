@@ -31,6 +31,7 @@ public:
 	virtual void CreateShaderResources();
 
 
+
 protected:
 	std::wstring GetWindowClassName() { return L"D3DAppWindow"; };
 
@@ -54,6 +55,7 @@ protected:
 	virtual void InitPipeline() = 0;     // loads and prepares the shaders
 	void DiscardD3D(void);         // closes Direct3D and releases memory
 	bool IsDebugEnabled() { return _enableDebug;  }
+	void OnResize(UINT width, UINT height) override;
 	LARGE_INTEGER GetFRameNumber() { return _frameNumber; }
 private:	
 	LARGE_INTEGER _lastPerformanceValue;
