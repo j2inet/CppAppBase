@@ -272,9 +272,10 @@ void D3DAppWindow::InitDeviceResources()
 		&featureLevel,
 		&devcon));
 	//auto  featureLevel = dev->GetFeatureLevel();
+	ComPtr<ID3D11Texture2D> backBuffer;
 	TOF(swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer));
 	TOF(dev->CreateRenderTargetView(backBuffer.Get(), NULL, backBufferTarget.GetAddressOf()));
-	TOF(backBuffer->Release());
+	backBuffer = nullptr;
 	devcon->OMSetRenderTargets(1, backBufferTarget.GetAddressOf(), nullptr);
 	SetViewport();
 	CreateShaderResources();
@@ -287,16 +288,16 @@ void D3DAppWindow::DiscardDeviceResources()
 
 	swapchain->SetFullscreenState(FALSE, NULL);    // switch to windowed mode
 	devcon->OMSetRenderTargets(0, 0, 0);
+		
+	swapchain = nullptr;
 	backBufferTarget = nullptr;
-	pixelShaderMap.clear();
-	vertexShaderMap.clear();
-	backBufferTarget = nullptr;
-	devcon = nullptr;
-	dev = nullptr;
+	
+		pixelShaderMap.clear();
+		vertexShaderMap.clear();
+		devcon = nullptr;
+		dev = nullptr;
 
-	//swapchain->Release();
-	//dev->Release();
-	//devcon->Release();
+
 }
 
 

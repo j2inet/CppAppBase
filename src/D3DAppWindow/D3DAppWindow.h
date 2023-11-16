@@ -45,7 +45,7 @@ protected:
 	ComPtr<IDXGISwapChain> swapchain;
 	ComPtr<ID3D11Device> dev;
 	ComPtr<ID3D11DeviceContext> devcon;
-	ComPtr<ID3D11Texture2D> backBuffer;
+	
 	ComPtr<ID3D11RenderTargetView> backBufferTarget;
 	ComPtr<ID3D11InputLayout> vertexColorLayout;
 	
