@@ -50,13 +50,59 @@ std::vector<std::wstring> split(std::wstring s, std::wstring delimiter) {
 
 void D3DAppWindow::OnResize(UINT width, UINT height)
 {
-		AppWindow::OnResize(width, height);
-		if (this->dev != nullptr && this->swapchain != nullptr)
+	AppWindow::OnResize(width, height);
+	if (this->dev != nullptr && this->swapchain != nullptr)
+	{
+		devcon->OMSetRenderTargets(0, 0, 0);
+		backBufferTarget = nullptr;
+		HRESULT hr = this->swapchain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 		{
-		DiscardDeviceResources();
-		this->swapchain->ResizeBuffers(2, GetClientWidth(), GetClientHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, 0);
-		this->InitDeviceResources();
+			// If the device was removed for any reason, a new device and swapchain will need to be created.
+			this->OnDeviceLost();
+			return;
+		}
+		else if (hr != S_OK)
+		{
+			ErrorLogger::Log(L"Failed to resize swapchain buffers.", hr);
+			TOF(hr);
+		}
+
+		ComPtr<ID3D11Texture2D> backBuffer;
+		swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer);
+		hr = dev->CreateRenderTargetView(backBuffer.Get(), NULL, &backBufferTarget);
+
+		backBuffer = nullptr;
+		devcon->OMSetRenderTargets(1, backBufferTarget.GetAddressOf(), NULL);
+
+		D3D11_VIEWPORT vp = {0, 0, GetClientWidth(), GetClientHeight(), 0.0f, 1.0f};
+		devcon->RSSetViewports(1, &vp);
+
 	}
+}
+
+
+void D3DAppWindow::OnDeviceLost()
+{
+	/*
+		DiscardDeviceResources();
+	HRESULT hr = this->swapchain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
+	{
+		// If the device was removed for any reason, a new device and swapchain will need to be created.
+		this->OnDeviceLost();
+		return;
+	}
+	else
+		TOF(hr);
+	swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer);
+	hr = dev->CreateRenderTargetView(backBuffer.Get(), NULL, &renderTargetView);
+	backBuffer = nullptr;
+	devcon->OMSetRenderTargets(1, renderTargetView.GetAddressOf(), NULL);
+	DiscardDeviceResources();
+	this->swapchain->ResizeBuffers(2, GetClientWidth(), GetClientHeight(), DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+	this->InitDeviceResources();
+	*/
 }
 std::wstring Str2Wstr(const std::string& str)
 {
@@ -205,10 +251,13 @@ void D3DAppWindow::InitDeviceResources()
 	scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;     // allow full-screen switching
 	// create a device, device context and swap chain using the information in the scd struct
 	DWORD createFlags = (IsDebugEnabled()) ? D3D11_CREATE_DEVICE_DEBUG : 0;
+
 	D3D_FEATURE_LEVEL lvl[] = {
-	D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0,
-	D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
-	D3D_FEATURE_LEVEL_9_3, D3D_FEATURE_LEVEL_9_2, D3D_FEATURE_LEVEL_9_1 };
+		D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0,
+		D3D_FEATURE_LEVEL_9_3, D3D_FEATURE_LEVEL_9_2, D3D_FEATURE_LEVEL_9_1 
+	};
+
 	D3D_FEATURE_LEVEL featureLevel;
 	TOF(D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
@@ -235,7 +284,10 @@ void D3DAppWindow::InitDeviceResources()
 
 void D3DAppWindow::DiscardDeviceResources()
 {
+
 	swapchain->SetFullscreenState(FALSE, NULL);    // switch to windowed mode
+	devcon->OMSetRenderTargets(0, 0, 0);
+	backBufferTarget = nullptr;
 	pixelShaderMap.clear();
 	vertexShaderMap.clear();
 	backBufferTarget = nullptr;

@@ -56,6 +56,7 @@ protected:
 	void DiscardD3D(void);         // closes Direct3D and releases memory
 	bool IsDebugEnabled() { return _enableDebug;  }
 	void OnResize(UINT width, UINT height) override;
+	void OnDeviceLost();
 	LARGE_INTEGER GetFRameNumber() { return _frameNumber; }
 private:	
 	LARGE_INTEGER _lastPerformanceValue;
