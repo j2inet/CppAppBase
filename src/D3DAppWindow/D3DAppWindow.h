@@ -55,12 +55,14 @@ protected:
 	virtual void InitPipeline() = 0;     // loads and prepares the shaders
 	void DiscardD3D(void);         // closes Direct3D and releases memory
 	bool IsDebugEnabled() { return _enableDebug;  }
-	void OnResize(UINT width, UINT height) override;
+	virtual void OnResize(UINT width, UINT height) override;
+	virtual void Update(DOUBLE timeSinceLastFrame);	
 	void OnDeviceLost();
-	LARGE_INTEGER GetFRameNumber() { return _frameNumber; }
+	LARGE_INTEGER GetFrameNumber() { return _frameNumber; }
 private:	
 	LARGE_INTEGER _lastPerformanceValue;
 	LARGE_INTEGER _frameNumber = { 0 };
+	LARGE_INTEGER _lastCounterValue;
 
 	DOUBLE  _performanceFrequency;
 	bool _enableDebug;

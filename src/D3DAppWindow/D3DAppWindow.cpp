@@ -82,6 +82,13 @@ void D3DAppWindow::OnResize(UINT width, UINT height)
 }
 
 
+void D3DAppWindow::Update(DOUBLE)
+{
+	++_frameNumber.QuadPart;
+
+}
+
+
 void D3DAppWindow::OnDeviceLost()
 {
 	/*
@@ -306,11 +313,13 @@ void D3DAppWindow::Idle()
 	LARGE_INTEGER currentPerformanceValue;
 	QueryPerformanceCounter(&currentPerformanceValue);
 	DOUBLE elapsedSeconds = static_cast<DOUBLE>(currentPerformanceValue.QuadPart - _lastPerformanceValue.QuadPart) / _performanceFrequency;
-	if (elapsedSeconds > 1.0 / 61.0) {
+	if (elapsedSeconds > 1.0 / 120.0) {
 		_lastPerformanceValue = currentPerformanceValue;
 		Render();
 		++_frameNumber.QuadPart;		
+		Update(elapsedSeconds);
 	}
+	
 }
 
 void D3DAppWindow::InitD3D()

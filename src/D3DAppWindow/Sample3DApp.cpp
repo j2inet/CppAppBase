@@ -78,14 +78,41 @@ void Sample3DApp::DiscardDeviceResources()
 	D3DAppWindow::DiscardDeviceResources();
 }
 
+
+void Sample3DApp::Update(DOUBLE time)
+{
+	D3DAppWindow::Update(time);
+	totalTime += time;
+	positioningConstants.offsetX = (float)sin(totalTime);
+	positioningConstants.offsetY = (float)cos(totalTime*0.3);
+}
+
+
 void Sample3DApp::InitPipeline()
 {
 	//D3DAppWindow::InitPipeline();
 	SetViewport();
+	InitConstantsBuffer();
 	devcon->OMSetRenderTargets(1, backBufferTarget.GetAddressOf(), nullptr);
 	devcon->VSSetShader(vertexShaderMap.at(L"MyVShader").Get(), 0, 0);
+	devcon->VSSetConstantBuffers(0, 1, positioningConstantsBuffer.GetAddressOf());
 	devcon->PSSetShader(pixelShaderMap.at(L"MyPShader").Get(), 0, 0);
 	devcon->IASetInputLayout(inputLayout.Get());
+}
+
+void Sample3DApp::InitConstantsBuffer()
+{
+	D3D11_BUFFER_DESC bufferDesc = {  };
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	bufferDesc.ByteWidth = sizeof(PositioningConstantsBuffer);
+	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;	
+	TOF(dev->CreateBuffer(&bufferDesc, NULL, &positioningConstantsBuffer));
+	UpdateConstantsBuffer();
+}
+
+void Sample3DApp::UpdateConstantsBuffer()
+{
+	devcon->UpdateSubresource(positioningConstantsBuffer.Get(), 0, 0, &positioningConstants, 16, 0);
 }
 
 void Sample3DApp::Render()
