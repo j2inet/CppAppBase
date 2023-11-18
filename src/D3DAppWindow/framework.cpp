@@ -5,3 +5,6 @@
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 
+//For Windows 11 D3D 12 debugger problems, uncomment the following.
+//extern "C" { __declspec(dllexport) extern const UINT D3D12SDKVersion = 611; }
+//extern "C" { __declspec(dllexport) extern const char* D3D12SDKPath = ".\\D3D12\\"; }

@@ -18,13 +18,13 @@ void Sample3DApp::InitDeviceResources()
 	HRESULT result;
 	CreateShaderResources();
 	ComPtr<ID3DBlob> vertexShaderBlob = vertexShaderBlobMap.at(L"MyVShader");
-	TOF(result = dev->CreateInputLayout(
+	result = dev->CreateInputLayout(
 		VERTEX_COLORED_DESCRIPTION,
 		2,
 		vertexShaderBlob->GetBufferPointer(),
 		vertexShaderBlob->GetBufferSize(),
 		&inputLayout
-	));
+	);
 	devcon->IASetInputLayout(inputLayout.Get());
 
 	D3D11_BUFFER_DESC vertexBufferDesc = {};
