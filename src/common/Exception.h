@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include <Windows.h>
-
+#include "ErrorLogger.h"
 
 
 
@@ -94,6 +94,9 @@ private:
 inline HRESULT TOF(HRESULT hr)
 {
 	if (FAILED(hr))
+	{
+		ErrorLogger::Log(L"COM exception occurred.", hr);
 		ThrowCOMException(hr);
+	}
 	return hr;
 }

@@ -257,7 +257,7 @@ void D3DAppWindow::InitDeviceResources()
 	scd.Windowed = TRUE;                                    // windowed/full-screen mode
 	scd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;     // allow full-screen switching
 	// create a device, device context and swap chain using the information in the scd struct
-	DWORD createFlags = (IsDebugEnabled()) ? D3D11_CREATE_DEVICE_DEBUG : 0;
+	DWORD createFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT | ((IsDebugEnabled()) ? D3D11_CREATE_DEVICE_DEBUG : 0);
 
 	D3D_FEATURE_LEVEL lvl[] = {
 		D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0,
@@ -266,7 +266,7 @@ void D3DAppWindow::InitDeviceResources()
 	};
 
 	D3D_FEATURE_LEVEL featureLevel;
-	TOF(D3D11CreateDeviceAndSwapChain(NULL,
+	HRESULT hr = (D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
 		createFlags,
@@ -278,6 +278,26 @@ void D3DAppWindow::InitDeviceResources()
 		&dev,
 		&featureLevel,
 		&devcon));
+	if (!SUCCEEDED(hr) && ((createFlags & D3D11_CREATE_DEVICE_DEBUG )== D3D11_CREATE_DEVICE_DEBUG))
+	{
+		createFlags = createFlags & (~D3D11_CREATE_DEVICE_DEBUG);
+		TOF(hr = (D3D11CreateDeviceAndSwapChain(NULL,
+			D3D_DRIVER_TYPE_HARDWARE,
+			NULL,
+			createFlags,
+			lvl,
+			_countof(lvl),
+			D3D11_SDK_VERSION,
+			&scd,
+			&swapchain,
+			&dev,
+			&featureLevel,
+			&devcon)));
+	} 
+	else
+	{
+		TOF(hr);
+	}
 	//auto  featureLevel = dev->GetFeatureLevel();
 	ComPtr<ID3D11Texture2D> backBuffer;
 	TOF(swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer));
