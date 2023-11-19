@@ -63,6 +63,9 @@
     <ClInclude Include="..\common\ErrorLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D3DAppWindow.cpp">
@@ -101,6 +104,9 @@
     <ClCompile Include="..\common\StringConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="D3DAppWindow.rc">
@@ -112,6 +118,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="D3DAppWindow.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\images\grad.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
