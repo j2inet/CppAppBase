@@ -11,12 +11,13 @@ using namespace Microsoft::WRL;
 std::wstring Str2Wstr(const std::string& str);
 std::vector<std::wstring> split(std::wstring s, std::wstring delimiter);
 std::vector<std::wstring> loadFileLines(std::wstring sourceFileName);
+//ComPtr<ID3D11Texture2D> backBuffer;
 
 
 class D3DAppWindow : public AppWindow {
 public:
 	D3DAppWindow(HINSTANCE hInstance, bool EnableDebug = false);
-	~D3DAppWindow();
+	virtual ~D3DAppWindow();
 
 	void Idle() override;
 	void Init() override;	
@@ -34,7 +35,7 @@ public:
 
 protected:
 	std::wstring GetWindowClassName() { return L"D3DAppWindow"; };
-
+	//ComPtr<ID3D11Texture2D> backBuffer;
 
 	std::map<std::wstring, ComPtr<ID3D11PixelShader>> pixelShaderMap;
 	std::map<std::wstring, ComPtr<ID3D11VertexShader>> vertexShaderMap;
@@ -65,5 +66,5 @@ private:
 	LARGE_INTEGER _lastCounterValue;
 
 	DOUBLE  _performanceFrequency;
-	bool _enableDebug;
+	bool _enableDebug = true;
 };

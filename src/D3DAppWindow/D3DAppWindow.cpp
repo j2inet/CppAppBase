@@ -71,8 +71,8 @@ void D3DAppWindow::OnResize(UINT width, UINT height)
 		ComPtr<ID3D11Texture2D> backBuffer;
 		swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer);
 		hr = dev->CreateRenderTargetView(backBuffer.Get(), NULL, &backBufferTarget);
-
 		backBuffer = nullptr;
+
 		devcon->OMSetRenderTargets(1, backBufferTarget.GetAddressOf(), NULL);
 
 		D3D11_VIEWPORT vp = {0, 0, GetClientWidth(), GetClientHeight(), 0.0f, 1.0f};
@@ -266,6 +266,10 @@ void D3DAppWindow::InitDeviceResources()
 	};
 
 	D3D_FEATURE_LEVEL featureLevel;
+	if (IsDebugEnabled())
+	{
+		OutputDebugString(L"Creating debug device\n");
+	}
 	HRESULT hr = (D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
@@ -280,6 +284,8 @@ void D3DAppWindow::InitDeviceResources()
 		&devcon));
 	if (!SUCCEEDED(hr) && ((createFlags & D3D11_CREATE_DEVICE_DEBUG )== D3D11_CREATE_DEVICE_DEBUG))
 	{
+
+		OutputDebugString(L"Failed to create device with debug enabled. Creating non-debug device.\r");
 		createFlags = createFlags & (~D3D11_CREATE_DEVICE_DEBUG);
 		TOF(hr = (D3D11CreateDeviceAndSwapChain(NULL,
 			D3D_DRIVER_TYPE_HARDWARE,

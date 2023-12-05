@@ -123,6 +123,21 @@
     <Image Include="assets\images\grad.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="assets\images\testPattern.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\images\plane_00.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\images\coloring.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\images\grad.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\images\shapes.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Text Include="shaderList.txt">
@@ -130,10 +145,12 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <FxCompile Include="Shaders\basicColoredPixelShader.hlsl" />
+    <FxCompile Include="Shaders\basicColoredVertexShader.hlsl" />
+    <FxCompile Include="Shaders\basicColoredTexturedPixelShader.hlsl" />
+    <FxCompile Include="Shaders\basicColoredTexturedVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\basicPixelShader.hlsl" />
-    <FxCompile Include="Shaders\basicVertexShader.hlsl" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

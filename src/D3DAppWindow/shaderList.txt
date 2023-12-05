@@ -1,2 +1,4 @@
-MyVShader,basicVertexShader,vs
-MyPShader,basicPixelShader,ps
+MyVShader,basicColoredVertexShader,vs
+MyPShader,basicColoredPixelShader,ps
+TexturedVShader,basicColoredTexturedVertexShader,vs
+TexturedPShader,basicColoredTexturedPixelShader,ps

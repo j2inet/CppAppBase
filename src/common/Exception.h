@@ -91,11 +91,15 @@ private:
 	throw ContentValueRequiredException(__FILEW__, __LINE__)
 
 
-inline HRESULT TOF(HRESULT hr)
+inline HRESULT TOF(HRESULT hr, std::wstring details = L"")
 {
 	if (FAILED(hr))
 	{
 		ErrorLogger::Log(L"COM exception occurred.", hr);
+		if (details.length() > 0)
+		{
+			ErrorLogger::Log(details);
+		}
 		ThrowCOMException(hr);
 	}
 	return hr;
