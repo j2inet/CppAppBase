@@ -30,3 +30,7 @@
 /src/D3DAppWindow/x64/Debug/vc143.idb
 /src/D3DAppWindow/x64/Debug/vc143.pdb
 /src/D3DAppWindow/x64/Debug/VertexTypes.obj
+src/D3DAppWindow/*.*
+/src/D3DAppWindow/x64/*.*
+src/D3DAppWindow/packages/*
+src/D3DAppWindow/x64/Debug/*

@@ -21,20 +21,11 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CppAppBase.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AppWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DerivedWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AppWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

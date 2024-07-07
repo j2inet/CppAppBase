@@ -1,5 +1,10 @@
 #pragma once
-#include "framework.h"
+#include <stdlib.h>
+#include <malloc.h>
+#include <memory.h>
+#include <tchar.h>
+#include <map>
+#include <windows.h>
 #include <sstream>
 #include <iostream>
 #include <wrl/client.h>
