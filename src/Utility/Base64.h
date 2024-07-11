@@ -6,7 +6,7 @@
 #include <queue>
 
 
-
+#pragma region Base64 Encoder
 class Base64EncoderStreamBuf : public std::streambuf
 {
 public:
@@ -39,3 +39,31 @@ private:
 	
 
 };
+#pragma endregion
+
+#pragma region Base64 Decoder
+class Base64DecoderStreamBuf : public std::streambuf
+{
+public:
+	Base64DecoderStreamBuf(std::istream& targetStream);	
+	int underflow() override;
+	
+private:
+	void decode();
+     std::istream& m_inputStream;
+	 std::queue<char> m_stream_fifo;
+
+	 size_t bytesRead = 0;
+	 bool EOFReached = false;
+ };
+
+class Base64DecoderStream : public std::istream
+{
+public:
+	Base64DecoderStream(std::istream& stream = std::cin);
+private:
+
+ };
+
+
+#pragma endregion
