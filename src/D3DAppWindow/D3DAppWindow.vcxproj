@@ -56,6 +56,7 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
+    <Import Project="..\CppAppBase\packages\directxtk_desktop_win10.2024.6.5.1\build\native\directxtk_desktop_win10.targets" Condition="Exists('..\CppAppBase\packages\directxtk_desktop_win10.2024.6.5.1\build\native\directxtk_desktop_win10.targets')" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -122,7 +123,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\shares\projects\Microsoft\DirectXTK\Bin\Desktop_2022_Win10\Win32\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\Debug</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderModel>4.0</ShaderModel>
@@ -148,7 +149,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\shares\projects\Microsoft\DirectXTK\Bin\Desktop_2022_Win10\Win32\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\Release</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderModel>4.0</ShaderModel>
@@ -171,6 +172,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="layout\VertexTypes.h" />
     <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="WICTextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\ErrorLogger.cpp" />
@@ -191,6 +193,7 @@
     <ClCompile Include="SmartHandle.cpp.cpp" />
     <ClCompile Include="layout\VertexTypes.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="WICTextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="D3DAppWindow.rc" />
@@ -235,13 +238,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="packages\directxtk_desktop_win10.2023.10.31.1\build\native\directxtk_desktop_win10.targets" Condition="Exists('packages\directxtk_desktop_win10.2023.10.31.1\build\native\directxtk_desktop_win10.targets')" />
-  </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('packages\directxtk_desktop_win10.2023.10.31.1\build\native\directxtk_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_win10.2023.10.31.1\build\native\directxtk_desktop_win10.targets'))" />
   </Target>
 </Project>
