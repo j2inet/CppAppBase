@@ -8,8 +8,6 @@
 #include "WICTextureLoader.h"
 
 
-using namespace DirectX;
-
 Sample3DApp::Sample3DApp(HINSTANCE hInstance)
 	: D3DAppWindow(hInstance, true)
 {
@@ -185,9 +183,9 @@ void Sample3DApp::InitDeviceResources()
 
 	InitConstantsBuffer();
 #pragma region sample texture
-	TOF(DirectX::CreateWICTextureFromFile(dev.Get(), devcon.Get(), L".\\assets\\images\\coloring.png", nullptr, &textureResource));
-	TOF(DirectX::CreateWICTextureFromFile(dev.Get(), devcon.Get(), L".\\assets\\images\\shapes.png", nullptr, &alternateTexture), L"Can't load shapes");
-	TOF(DirectX::CreateWICTextureFromFile(dev.Get(), devcon.Get(), L".\\assets\\images\\plane_00.png", nullptr, &planeTexture), L"Can't load plane");
+	TOF(CreateWICTextureFromFile(dev.Get(), devcon.Get(), L".\\assets\\images\\coloring.png", nullptr, &textureResource));
+	TOF(CreateWICTextureFromFile(dev.Get(), devcon.Get(), L".\\assets\\images\\shapes.png", nullptr, &alternateTexture), L"Can't load shapes");
+	TOF(CreateWICTextureFromFile(dev.Get(), devcon.Get(), L".\\assets\\images\\plane_00.png", nullptr, &planeTexture), L"Can't load plane");
 #pragma endregion
 
 #pragma region render state
