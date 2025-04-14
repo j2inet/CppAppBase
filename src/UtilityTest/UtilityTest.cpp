@@ -16,19 +16,22 @@ int main()
         encoder << "test";// << std::flush;
         encoder.flush();
         result = ss.str();
-        //std::cout << result << std::endl;
+        std::cout << result << std::endl;
     }
 
     std::stringstream ss(result);
     Base64DecoderStream decoder(ss);
-    while (decoder.eof() == false)
+    while (!decoder.eof())
     {
 		char c;
 		c = decoder.get();
+        int x = 1 + 2;
+
         std::cout.put(c);
         std::cout.flush();
 		
 	}
+    std::cout << ss.str();
 
 }
 

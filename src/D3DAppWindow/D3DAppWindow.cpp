@@ -344,8 +344,7 @@ void D3DAppWindow::Idle()
 		Render();
 		++_frameNumber.QuadPart;		
 		Update(elapsedSeconds);
-	}
-	
+	}	
 }
 
 void D3DAppWindow::InitD3D()

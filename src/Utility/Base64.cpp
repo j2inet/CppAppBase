@@ -58,6 +58,7 @@ std::streamsize  Base64EncoderStreamBuf::xsputn(const char* s, std::streamsize n
 		m_stream_fifo.push(s[i]);
 	}
 	encode(false);
+	pbump(n);
 	return n;
 
 }
@@ -173,22 +174,19 @@ void Base64EncoderStreamBuf::encodePartial()
 
 Base64DecoderStreamBuf::Base64DecoderStreamBuf(std::istream& targetStream) :m_inputStream(targetStream)
 {
+	bufferedCharacters = std::shared_ptr<char[]>(new char[3], [](char* p)->void { delete[] p; });
 }
 
 int Base64DecoderStreamBuf::underflow()
 {
-	if (m_stream_fifo.size())
-	{
-		auto retVal = m_stream_fifo.front();
-		m_stream_fifo.pop();
-		return std::char_traits<char>::to_int_type(retVal);
-	}
-
+	char* c = gptr();
 	if(m_inputStream.eof())
 	{
 		std::char_traits<char>::eof();
 	}
 
+	bufferSize = 3;
+	bufferIndex = 0;
 
 	std::vector<char> byteBuffer;
 	std::vector<char> decodedBytes;
@@ -217,18 +215,26 @@ int Base64DecoderStreamBuf::underflow()
 		}
 	}
 
-	m_stream_fifo.push((base64_chars.find(byteBuffer[0]) << 2) + (base64_chars.find(byteBuffer[1]) >> 4));
+	bufferedCharacters[0] = ((base64_chars.find(byteBuffer[0]) << 2) + (base64_chars.find(byteBuffer[1]) >> 4));
 	if (byteBuffer[2] != '=')
 	{
-		m_stream_fifo.push(((base64_chars.find(byteBuffer[1]) & 0x0F) << 4) + (base64_chars.find(byteBuffer[2]) >> 2));
-	}
-	if (byteBuffer[3] != '=')
+		bufferedCharacters[1] = (((base64_chars.find(byteBuffer[1]) & 0x0F) << 4) + (base64_chars.find(byteBuffer[2]) >> 2));
+		if (byteBuffer[3] != '=')
+		{
+			bufferedCharacters[2] = (((base64_chars.find(byteBuffer[2]) & 0x03) << 6) + base64_chars.find(byteBuffer[3]));
+		}
+		else
+		{
+			bufferSize = 2;
+		}
+	} 
+	else
 	{
-		m_stream_fifo.push(((base64_chars.find(byteBuffer[2]) & 0x03) << 6) + base64_chars.find(byteBuffer[3]));
+		bufferSize = 1;
 	}
-
-	auto retVal = m_stream_fifo.front();
-	m_stream_fifo.pop();
+	bufferIndex = 0;
+	auto retVal = bufferedCharacters[0];
+	c = gptr();
 	return std::char_traits<char>::to_int_type(retVal);
 }
 
@@ -237,3 +243,37 @@ Base64DecoderStream::Base64DecoderStream(std::istream& stream ): std::istream(ne
 {
 
 }
+
+
+int Base64DecoderStreamBuf::sync()
+{
+	return 0;
+}
+
+
+char* Base64DecoderStreamBuf::eback() const
+{
+	if (bufferSize == 0) return nullptr;	
+	char* retVal = bufferedCharacters.get();
+	return retVal;
+}
+
+ char* Base64DecoderStreamBuf::gptr() const
+{
+	if (bufferSize == 0) return nullptr;
+	if (bufferIndex >= bufferSize) return nullptr;
+	return  bufferedCharacters.get()+bufferIndex;
+}
+
+ char* Base64DecoderStreamBuf::egptr() const
+ {
+	 if (bufferSize == 0) return nullptr;
+	 if (bufferIndex >= bufferSize) return nullptr;
+	 char* retVal = bufferedCharacters.get() + (bufferSize);
+ }
+
+
+ void Base64DecoderStreamBuf::gbump(int n)
+ {
+	 ++bufferIndex;
+ }

@@ -47,11 +47,36 @@ class Base64DecoderStreamBuf : public std::streambuf
 public:
 	Base64DecoderStreamBuf(std::istream& targetStream);	
 	int underflow() override;
-	
+	int sync();
+	virtual char* egptr() { 
+		if (bufferSize == 0) return nullptr;
+		if (bufferIndex >= bufferSize) return nullptr;
+		return &bufferedCharacters[bufferIndex];
+	}
+protected:
+	///Returns a pointer to the first element of the array with the portion of the controlled input sequence that is currently buffered.
+	virtual char* eback() const;
+	/// <summary>
+	/// Returns a pointer to the current element of the controlled input sequence (i.e., the "get pointer").
+	/// </summary>
+	/// <returns>A pointer to the current element in the controlled input sequence.</returns>
+	virtual char* gptr() const;
+	/// <summary>
+	/// Returns a pointer to the element just past the last element of the array with the portion of the controlled input sequence that is currently buffered.
+	//  Member functions can access this array directly; It is described by the pointers returned by the following protected member functions :
+	/// </summary>
+	/// <returns></returns>
+	virtual char* egptr() const;
+
+
+	void gbump(int n);
+
 private:
+	int bufferIndex = 0;;
 	void decode();
      std::istream& m_inputStream;
-	 std::queue<char> m_stream_fifo;
+	 std::shared_ptr<char[]> bufferedCharacters;
+	 int bufferSize = 0;
 
 	 size_t bytesRead = 0;
 	 bool EOFReached = false;
